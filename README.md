@@ -87,6 +87,11 @@ NOTICE.md                атрибуция сторонних компонен�
 - [alkoleft / tree-sitter-bsl](https://github.com/alkoleft/tree-sitter-bsl) — грамматика BSL.
 - [tree-sitter](https://github.com/tree-sitter/tree-sitter) — движок разбора.
 
+## Зеркала
+
+- GitHub: https://github.com/sonnix-msk/notepadpp-bsl-highlight
+- GitFlic: https://gitflic.ru/project/sonnix/notepadpp-bsl-highlight
+
 ## Участие
 
 Issues и pull requests приветствуются: правила подсветки, цвета, новые группы токенов,
