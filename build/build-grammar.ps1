@@ -65,6 +65,21 @@ try {
 
     $targets = switch ($Platform) { 'both' { @('x64', 'x86') } default { @($Platform) } }
 
+    # Version resource (gives the DLL real metadata; reduces AV false positives).
+    $RcFile = Join-Path $PSScriptRoot 'grammar.rc'
+    $resFile = Join-Path $tmp 'grammar.res'
+    if (Test-Path -LiteralPath $RcFile) {
+        $rcCmd = 'call "{0}" x64 >nul 2>&1 && rc /nologo /fo "{1}" "{2}"' -f $vcvars, $resFile, $RcFile
+        cmd /c $rcCmd
+        if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $resFile)) {
+            Err 'Не удалось скомпилировать ресурс версии (grammar.rc).'
+            exit 1
+        }
+        Info "Ресурс версии: $resFile"
+    } else {
+        Info 'grammar.rc не найден — DLL будет без метаданных.'
+    }
+
     foreach ($arch in $targets) {
         $outArch = Join-Path $OutDir $arch
         New-Item -ItemType Directory -Force -Path $outArch | Out-Null
@@ -72,7 +87,9 @@ try {
         New-Item -ItemType Directory -Force -Path $foDir | Out-Null
         $dll = Join-Path $outArch 'tree-sitter-bsl.dll'
 
-        $cmd = 'call "{0}" {1} >nul 2>&1 && cd /d "{2}" && cl /nologo /LD /O2 /DNDEBUG /std:c11 /I "src" "src\parser.c" /Fo:"{3}\\" /link /OUT:"{4}"' -f $vcvars, $arch, $bsl, $foDir, $dll
+        $inputs = '"src\parser.c"'
+        if (Test-Path -LiteralPath $resFile) { $inputs += ' "' + $resFile + '"' }
+        $cmd = 'call "{0}" {1} >nul 2>&1 && cd /d "{2}" && cl /nologo /LD /O2 /DNDEBUG /std:c11 /I "src" {3} /Fo:"{4}\\" /link /OUT:"{5}"' -f $vcvars, $arch, $bsl, $inputs, $foDir, $dll
         Info ''
         Info "=== Сборка $arch ==="
         cmd /c $cmd
