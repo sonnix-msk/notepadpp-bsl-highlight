@@ -1,0 +1,93 @@
+# Подсветка BSL (1С:Предприятие) для Notepad++
+
+Качественная подсветка синтаксиса языка 1С:Предприятие (BSL) в Notepad++ — на базе
+грамматики [tree-sitter](https://tree-sitter.github.io/), а не «пользовательского языка» (UDL).
+
+Плагин [NppTreeSitter](https://github.com/Thorium/NppTreeSitter) разбирает код в синтаксическое
+дерево и раскрашивает токены по их реальной роли. Это даёт точную подсветку без «угадывания»
+по словарю — то, чего принципиально не умеет обычный UDL в Notepad++.
+
+## Возможности
+
+- Подсветка ключевых слов, строк, чисел, дат, комментариев, операторов, препроцессора
+  (`#Область`, `#Если`, `&НаСервере`, `#Вставка` …) и идентификаторов.
+- Директивы препроцессора красятся **целиком однострочно** — как в Конфигураторе.
+- Фолдинг по грамматике (процедуры/функции/блоки).
+- Работает для файлов `.bsl` и `.os`.
+
+## Установка (для пользователя)
+
+Скачайте `Notepad++-BSL.zip` из раздела **Releases**, распакуйте и запустите `INSTALL.bat`.
+Подробности — в `README.txt` внутри архива.
+
+Требования: Windows, 64- или 32-разрядный Notepad++ 8.x.
+
+## Сборка дистрибутива (для разработчика)
+
+Нужны: Windows, [MSVC Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
+(C++), PowerShell.
+
+```powershell
+# собрать грамматику (x64+x86) и собрать zip-дистрибутив в dist\
+build\make-release.ps1
+```
+
+Скрипты:
+- `build/build-grammar.ps1` — скачивает исходники грамматики и компилирует
+  `tree-sitter-bsl.dll` для x64 и/или x86.
+- `build/make-release.ps1` — собирает всё в `dist\Notepad++-BSL\` и `dist\Notepad++-BSL.zip`.
+- `build/versions.psd1` — закреплённые версии внешних компонентов.
+
+## Структура репозитория
+
+```
+src/
+  bsl-highlights.scm     правила подсветки (tree-sitter query)
+  TreeSitterLexer.xml    язык + цветовая схема для Notepad++
+  install.ps1            установщик
+  INSTALL.bat            лаунчер установщика
+  README-install.txt     инструкция для конечного пользователя
+  example.bsl            пример кода для проверки
+build/
+  build-grammar.ps1
+  make-release.ps1
+  versions.psd1
+LICENSES/                тексты лицензий сторонних компонентов
+LICENSE                  лицензия нашей работы (MIT)
+NOTICE.md                атрибуция сторонних компонентов
+```
+
+## Как устроена подсветка
+
+Грамматика BSL — [alkoleft/tree-sitter-bsl](https://github.com/alkoleft/tree-sitter-bsl).
+Наш вклад — `bsl-highlights.scm` (правила tree-sitter query) и конфигурация Notepad++.
+
+Важные детали:
+
+- **Приоритет правил.** Плагин рисует совпадения, отсортированные по `(позиция, номер
+  правила)`, побеждает **последнее**. Поэтому общие правила — в начале файла, частные — в конце.
+- **Препроцессор.** Нода `preprocessor` охватывает *весь* блок `#Если…#КонецЕсли`
+  (многострочный), поэтому красится не она, а токены директивы через прямых детей ноды.
+- **Цвета** задаются в `TreeSitterLexer.xml`; **группы токенов** — в `bsl-highlights.scm`.
+
+Подробная спецификация — в проекте-источнике (`notepad++-bsl-подсветка-СПЕКА.md`).
+
+## Лицензии
+
+- Наша работа (скрипты, query, конфиг, документация) — **MIT** (`LICENSE`).
+- Плагин **NppTreeSitter** распространяется как есть под **GPL-2.0-or-later**
+  (`LICENSES/GPL-2.0-or-later.txt`).
+- Грамматика **tree-sitter-bsl** — MIT; рантайм **tree-sitter** — MIT.
+
+Полный состав и атрибуция — в `NOTICE.md`.
+
+## Благодарности
+
+- [Thorium / NppTreeSitter](https://github.com/Thorium/NppTreeSitter) — хост-плагин.
+- [alkoleft / tree-sitter-bsl](https://github.com/alkoleft/tree-sitter-bsl) — грамматика BSL.
+- [tree-sitter](https://github.com/tree-sitter/tree-sitter) — движок разбора.
+
+## Участие
+
+Issues и pull requests приветствуются: правила подсветки, цвета, новые группы токенов,
+поддержка других диалектов (OneScript, SDBL).

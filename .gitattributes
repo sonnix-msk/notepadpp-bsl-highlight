@@ -1,0 +1,12 @@
+# Normalize text line endings to LF in the repository.
+* text=auto eol=lf
+
+# Keep scripts familiar on Windows.
+*.ps1 text eol=crlf
+*.psd1 text eol=crlf
+*.bat text eol=crlf
+
+# Binaries
+*.dll binary
+*.zip binary
+*.exe binary

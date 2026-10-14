@@ -1,0 +1,6 @@
+# Build output / distributable (attached to Releases, not committed)
+dist/
+
+# Scratch
+*.tmp
+*.log
