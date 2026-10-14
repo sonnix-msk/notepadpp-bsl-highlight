@@ -89,7 +89,9 @@ try {
 
         $inputs = '"src\parser.c"'
         if (Test-Path -LiteralPath $resFile) { $inputs += ' "' + $resFile + '"' }
-        $cmd = 'call "{0}" {1} >nul 2>&1 && cd /d "{2}" && cl /nologo /LD /O2 /DNDEBUG /std:c11 /I "src" {3} /Fo:"{4}\\" /link /OUT:"{5}"' -f $vcvars, $arch, $bsl, $inputs, $foDir, $dll
+        # /Brepro (cl+link) and /d1nodatetime make the build reproducible: same
+        # source + same toolchain -> identical DLL bytes (stable SHA256).
+        $cmd = 'call "{0}" {1} >nul 2>&1 && cd /d "{2}" && cl /nologo /LD /O2 /DNDEBUG /std:c11 /Brepro /d1nodatetime /I "src" {3} /Fo:"{4}\\" /link /Brepro /OUT:"{5}"' -f $vcvars, $arch, $bsl, $inputs, $foDir, $dll
         Info ''
         Info "=== Сборка $arch ==="
         cmd /c $cmd

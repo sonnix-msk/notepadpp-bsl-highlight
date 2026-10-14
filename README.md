@@ -112,6 +112,26 @@ NOTICE.md                атрибуция сторонних компонен�
 срабатывании в Kaspersky (OpenTIP: https://opentip.kaspersky.com/ → загрузить файл →
 «Сообщить о ложном срабатывании»).
 
+## Воспроизводимая сборка
+
+`tree-sitter-bsl.dll` собирается **детерминированно**: флаги `/Brepro /d1nodatetime` (cl) +
+`/link /Brepro` дают байт-в-байт одинаковый файл при одинаковых исходниках и тулчейне — на
+любой машине и из любого каталога. Собрать самому и сверить:
+
+```powershell
+build\make-release.ps1   # нужен MSVC Build Tools 2022+ (C++)
+```
+
+SHA256 собранной грамматики (релиз `v0.1.0`):
+
+```
+x64  tree-sitter-bsl.dll  9903AD29B3C88F14A468C04409563AC07C840DB52FA33892BAD87FCBF5255617
+x86  tree-sitter-bsl.dll  D849ADF974B2F2AA82DADC6CF8E0C942A43A9C63092CEB4A364CD504FDCC2F3F
+```
+
+Совпадение хеша подтверждает, что DLL собрана именно из этих исходников — это и защита от
+подмены, и окончательный ответ на вопрос «а точно не вирус?».
+
 ## Зеркала
 
 - GitHub: https://github.com/sonnix-msk/notepadpp-bsl-highlight
