@@ -1,10 +1,12 @@
 ; 1C:Enterprise (BSL) highlighting for NppTreeSitter.
-; NOTE on priority: the plugin applies matches sorted by (start, pattern index) and
-; the LAST paint wins. So generic patterns go FIRST, specific ones LAST.
-; Priority order below (low -> high): generic identifier, literals/operators/keywords,
-; names/annotations, then preprocessor directives (highest).
+; NOTE on priority: the plugin paints matches sorted by (start, pattern index);
+; LAST paint wins. A nested token (later start) overrides an enclosing one, so
+; every token we want colored must be matched explicitly. Generic rules go FIRST,
+; specific ones LAST.
+; Priority (low -> high): generic identifier, literals/keywords/punct,
+; names/annotations, preprocessor directives (incl. broken/ERROR states).
 
-; --- Generic fallback: any identifier not matched below (variables, properties...) ---
+; --- Generic fallback: any identifier (do not overwrite specific rules) ---
 (identifier) @type
 
 ; --- Comments ---
@@ -77,9 +79,13 @@
   (WHILE_KEYWORD)
 ] @keyword
 
-(NEW_KEYWORD) @constructor
+; `Новый` is a keyword in 1C, not a function-like constructor.
+(NEW_KEYWORD) @keyword
 
-; --- Names (beat the generic @type fallback) ---
+; Member after a dot (Запрос.Параметры) is an identifier aliased as `property`.
+(property) @type
+
+; --- Names ---
 (procedure_definition
   name: (identifier) @function)
 
@@ -93,8 +99,7 @@
 (annotation) @attribute
 
 ; ===========================================================================
-; Preprocessor directives (#... and &...) - highest priority.
-; Directives are single-line; the whole directive line renders as Preprocessor.
+; Preprocessor directives (#... and &...): the whole directive line.
 ; ===========================================================================
 
 ; &-annotations are wrapped in a preprocessor node
@@ -112,7 +117,7 @@
   (preproc)
 ] @preproc
 
-; #Область <Имя> / region name
+; #Область <Имя>
 (preprocessor
   name: (identifier) @preproc)
 
@@ -120,8 +125,7 @@
 (preprocessor
   (THEN_KEYWORD) @preproc)
 
-; The condition expression of #Если / #ИначеЕсли (a direct child expression),
-; plus its descendants so nested identifiers/operators also render as directive.
+; Condition of #Если / #ИначеЕсли, plus nested descendants.
 (preprocessor
   (expression) @preproc)
 
@@ -139,3 +143,67 @@
 
 (preprocessor
   (expression (_ (_ (_ (_ (_) @preproc))))))
+
+; ===========================================================================
+; Broken / still-being-typed directives parse as (ERROR ...).
+; Mirror the rules above so the directive line stays colored while typing.
+; ===========================================================================
+
+; A lone #/&-directive with no recognizable nodes yet: color it if the text
+; starts with # or & (after optional spaces) and does not span lines.
+((ERROR) @preproc
+  (#match? @preproc "^[ \t]*[#&]")
+  (#not-match? @preproc "\n"))
+
+(ERROR
+  (PREPROC_IF_KEYWORD) @preproc)
+(ERROR
+  (PREPROC_ELSIF_KEYWORD) @preproc)
+(ERROR
+  (PREPROC_ELSE_KEYWORD) @preproc)
+(ERROR
+  (PREPROC_ENDIF_KEYWORD) @preproc)
+(ERROR
+  (PREPROC_REGION_KEYWORD) @preproc)
+(ERROR
+  (PREPROC_ENDREGION_KEYWORD) @preproc)
+(ERROR
+  (preproc) @preproc)
+
+(ERROR
+  (annotation) @attribute)
+
+; condition tokens inside a broken directive
+(ERROR
+  (PREPROC_IF_KEYWORD)
+  (expression) @preproc)
+(ERROR
+  (PREPROC_ELSIF_KEYWORD)
+  (expression) @preproc)
+(ERROR
+  (PREPROC_IF_KEYWORD)
+  (expression (_) @preproc))
+(ERROR
+  (PREPROC_ELSIF_KEYWORD)
+  (expression (_) @preproc))
+(ERROR
+  (PREPROC_IF_KEYWORD)
+  (expression (_ (_) @preproc)))
+(ERROR
+  (PREPROC_IF_KEYWORD)
+  (expression (_ (_ (_) @preproc))))
+(ERROR
+  (PREPROC_IF_KEYWORD)
+  (expression (_ (_ (_ (_) @preproc)))))
+(ERROR
+  (PREPROC_IF_KEYWORD)
+  (AND_KEYWORD) @preproc)
+(ERROR
+  (PREPROC_IF_KEYWORD)
+  (NOT_KEYWORD) @preproc)
+(ERROR
+  (PREPROC_IF_KEYWORD)
+  (OR_KEYWORD) @preproc)
+(ERROR
+  (PREPROC_IF_KEYWORD)
+  (THEN_KEYWORD) @preproc)
