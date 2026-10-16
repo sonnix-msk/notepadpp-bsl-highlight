@@ -101,6 +101,30 @@
 Плагин `TreeSitterLexer`, грамматики `bsl`, `python`, `markdown`, `markdown_inline`.
 (bsl — наш; остальные добавлены для тестов.)
 
+## Холодный старт (после сжатия контекста)
+
+1. Прочитать `docs/HANDOFF.md` (этот файл) и спеку `../notepad++-bsl-подсветка-СПЕКА.md`.
+2. Репозиторий: `D:\OpenCode\Скрипты\Notepad++-BSL`. Проверить `git status`, `git log`.
+3. **Сборка пакета:** `powershell -File build\make-release.ps1` (нужен MSVC Build Tools;
+   каталог `dist\` пересобирается). Перед сборкой закрыть Notepad++.
+4. **Публикация:** `git push origin main` (уходит в оба зеркала — GitHub + GitFlic).
+5. **GitHub API** (релизы/issues) — токен уже сохранён в Git Credential Manager, получить так:
+   ```powershell
+   $env:PATH="C:\Program Files\Git\ucrt64\bin;$env:PATH"
+   $tok = ((("protocol=https`nhost=github.com`n`n" | git credential fill 2>&1) |
+            Where-Object { $_ -like "password=*" }) -replace '^password=','')
+   ```
+   Заголовок: `@{ Authorization="token $tok"; 'User-Agent'='oc' }`. Права: `repo`.
+6. **GitFlic API** — нужен свежий токен от пользователя (старые он отзывает). База
+   `https://api.gitflic.ru`, заголовок `Authorization: token <token>` (детали в спеке §7).
+7. **Заново собрать инструменты-симуляторы** (если temp очистили) — из `…\Temp\opencode\ts-bsl\`,
+   `vcvarsall.bat x64` + `cl`; ключевые include-пути:
+   ```
+   /I rt\tree-sitter-0.25.10\lib\include  /I src\tree-sitter-bsl-0.1.7\grammars\bsl\src
+   /I rt\tree-sitter-0.25.10\lib\src   (плюс lib\src\lib.c и parser.c в линковку)
+   ```
+   `paint`/`fold_*` — C++ (`/EHsc`), нужен `extern "C"` для `tree_sitter_bsl`.
+
 ## Где остановились / следующие шаги
 
 1. **Ждём скриншот** от пользователя → вставить в `docs/ANNOUNCE.md` (`<СКРИНШОТ>`).
