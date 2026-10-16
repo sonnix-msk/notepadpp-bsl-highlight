@@ -28,12 +28,14 @@
 | Вариация | Сборка | Артефакт | Что внутри |
 |---|---|---|---|
 | **Standard** | `build\make-release.ps1` | `dist\Notepad++-BSL.zip` | стоковый лексер Thorium (как публичный релиз) |
-| **Extended** (авторская) | `build\make-release-extended.ps1` | `dist-extended\Notepad++-BSL-extended.zip` | пропатченный лексер из форка: фиксы #7/#8/шрифт, (позже) фрагменты запросов SDBL |
+| **Extended** (авторская) | `build\make-release-extended.ps1` | `dist-extended\Notepad++-BSL-extended.zip` | пропатченный лексер из форка: фиксы #7/#8/шрифт + подсветка запросов SDBL (фрагменты в строках `.bsl` и отдельные `.sdbl`/`.1cquery`) |
 
 Публичный релиз на GitHub/GitFlic — это **Standard**. Extended существует для личного
 использования (и для желающих); в нём — только наша DLL из форка вместо стоковой.
 По мере влития PR #9/#10/#11 в апстрим Extended «худеет» (остаётся только своя, не-апстрим
-часть — инъекции/скоринг SDBL).
+часть — SDBL-фрагменты/язык запроса).
+**Extended требует** в дистрибутиве `tree-sitter-sdbl.dll` + `sdbl-highlights.scm` (иначе
+подсветка запросов молча отключается) и стили `QUERY *` (14..24) в `TreeSitterLexer.xml`.
 
 ## Личный форк плагина (фиксы #7/#8, позже — инъекции)
 
@@ -50,9 +52,10 @@
   фикс мелкого шрифта → [PR #10](https://github.com/Thorium/NppTreeSitter/pull/10);
   `sonnix/folding` — сворачивание (#8) → [PR #9](https://github.com/Thorium/NppTreeSitter/pull/9);
   `sonnix/mapping` — bsl-детект + локальная XML-палитра (в апстрим не ушло);
-  `sonnix/personal` — **интеграция всех наших фиксов** (из неё собирается Extended);
-  `sonnix/injections` — разработка SDBL-фрагментов (дизайн+харнесс; `docs/QUERY-FRAGMENTS.md`),
-  вливается в `sonnix/personal` по мере готовности.
+  `sonnix/injections` — подсветка фрагментов запросов SDBL внутри строк BSL (+ своя палитра);
+  `sonnix/sdbl` — отдельный язык `treesitter.sdbl` для `.sdbl`/`.1cquery` (та же палитра);
+  `sonnix/personal` — **интеграция всех наших фиксов** (из неё собирается Extended).
+  `injections`/`sdbl` вливаются в `sonnix/personal` по мере готовности.
 - **Где что править:** #7 — `src/dllmain.cpp` (`DetectTreeSitterLanguageForFile`,
   `PreferBuiltInLexerForExtension`); #8 — `Fold()` в `src/TreeSitterLexer.cpp`; стили — там же
   (`LoadPaletteFromConfigXml`/`ApplyTreeSitterStyleColors`); инъекции — там же
