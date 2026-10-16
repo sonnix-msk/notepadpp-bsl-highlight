@@ -30,9 +30,12 @@
 - **Форк:** https://github.com/sonnix-msk/NppTreeSitter (fork of `Thorium/NppTreeSitter`).
 - **Локально:** `D:\OpenCode\Форки\NppTreeSitter` (клон с сабмодулем `external/tree-sitter`).
 - **Ремоуты:** `origin` = наш форк, `upstream` = Thorium.
-- **Ветки:** `master` — зеркало апстрима (не редактируем); `sonnix/mapping` — фикс #7 +
-  стили/шрифт (готово, проверено); `sonnix/folding` — фикс #8 (готово); `sonnix/injections` —
-  SDBL (позже); `sonnix/personal` — интеграция mapping+folding для личной сборки/теста.
+- **Ветки:** `master` — зеркало апстрима (не редактируем); `sonnix/bsl-detect` — авто-детект
+  `.bsl`/`.os` → [PR #11](https://github.com/Thorium/NppTreeSitter/pull/11); `sonnix/styles` —
+  фикс мелкого шрифта → [PR #10](https://github.com/Thorium/NppTreeSitter/pull/10);
+  `sonnix/folding` — сворачивание (#8) → [PR #9](https://github.com/Thorium/NppTreeSitter/pull/9);
+  `sonnix/mapping` — bsl-детект + локальная XML-палитра (в апстрим не ушло);
+  `sonnix/personal` — интеграция для личной сборки; `sonnix/injections` — SDBL (позже).
 - **Где что править:** #7 — `src/dllmain.cpp` (`DetectTreeSitterLanguageForFile`,
   `PreferBuiltInLexerForExtension`); #8 — `Fold()` в `src/TreeSitterLexer.cpp`; стили — там же
   (`LoadPaletteFromConfigXml`/`ApplyTreeSitterStyleColors`); инъекции — там же
@@ -168,9 +171,10 @@
 1. **Ждём скриншот** от пользователя → вставить в `docs/ANNOUNCE.md` (`<СКРИНШОТ>`).
 2. **Опубликовать анонс** (Infostart + Хабр + Telegram), ссылки уже в текстах.
 3. При желании — зеркало на GitVerse.ru.
-4. **Предложить апстриму PR по проверенным фиксам** (см. `docs/UPSTREAM.md` §0а):
-   сворачивание (#8, language-agnostic), авто-детект (#7), стили/шрифт из XML (мелкий шрифт).
-   Ветки `sonnix/*` в форке готовы; разделять по PR, если автор попросит.
+4. **PR в апстрим отправлены** (2026-10-16): [#9 сворачивание](https://github.com/Thorium/NppTreeSitter/pull/9),
+   [#10 шрифт](https://github.com/Thorium/NppTreeSitter/pull/10),
+   [#11 bsl-детект](https://github.com/Thorium/NppTreeSitter/pull/11) — все `mergeable`.
+   Детали и ветки — `docs/UPSTREAM.md` §0а. Следить за ответами автора.
 5. **Подсветка запросов SDBL** (`sonnix/injections`, позже): инъекции не вызывают
    `EvaluatePredicates` (`#match?` игнорируется), нет конкатенации. Требует заметной доработки
    плагина — не quick fix.
