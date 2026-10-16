@@ -607,14 +607,14 @@
                  reads as a different language (Extended build). Tunable here or
                  via Style Configurator. -->
             <WordsStyle name="QUERY KEYWORD"      styleID="14" fgColor="0B5394" fontStyle="1" />
-            <WordsStyle name="QUERY IDENTIFIER"   styleID="15" fgColor="333333" />
+            <WordsStyle name="QUERY IDENTIFIER"   styleID="15" fgColor="0E312F" />
             <WordsStyle name="QUERY STRING"       styleID="16" fgColor="7F6000" />
             <WordsStyle name="QUERY NUMBER"       styleID="17" fgColor="B45F06" />
             <WordsStyle name="QUERY DATE"         styleID="18" fgColor="8A6D00" />
             <WordsStyle name="QUERY OPERATOR"     styleID="19" fgColor="666666" />
             <WordsStyle name="QUERY FUNCTION"     styleID="20" fgColor="7B1FA2" fontStyle="1" />
             <WordsStyle name="QUERY TYPE"         styleID="21" fgColor="00796B" />
-            <WordsStyle name="QUERY CONSTANT"     styleID="22" fgColor="C2185B" />
+            <WordsStyle name="QUERY CONSTANT"     styleID="22" fgColor="752858" fontStyle="1" />
             <WordsStyle name="QUERY PARAMETER"    styleID="23" fgColor="00838F" />
             <WordsStyle name="QUERY PUNCTUATION"  styleID="24" fgColor="9AA0A6" />
         </LexerType>
