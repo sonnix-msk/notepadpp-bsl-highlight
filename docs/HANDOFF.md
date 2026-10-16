@@ -30,11 +30,19 @@
 - **Форк:** https://github.com/sonnix-msk/NppTreeSitter (fork of `Thorium/NppTreeSitter`).
 - **Локально:** `D:\OpenCode\Форки\NppTreeSitter` (клон с сабмодулем `external/tree-sitter`).
 - **Ремоуты:** `origin` = наш форк, `upstream` = Thorium.
-- **Ветки:** `master` — зеркало апстрима (не редактируем); `sonnix/mapping` — фикс #7;
-  `sonnix/folding` — фикс #8; `sonnix/injections` — SDBL (позже).
+- **Ветки:** `master` — зеркало апстрима (не редактируем); `sonnix/mapping` — фикс #7 +
+  стили/шрифт (готово, проверено); `sonnix/folding` — фикс #8 (готово); `sonnix/injections` —
+  SDBL (позже); `sonnix/personal` — интеграция mapping+folding для личной сборки/теста.
 - **Где что править:** #7 — `src/dllmain.cpp` (`DetectTreeSitterLanguageForFile`,
-  `PreferBuiltInLexerForExtension`); #8 — `Fold()` в `src/TreeSitterLexer.cpp`; инъекции — там же
+  `PreferBuiltInLexerForExtension`); #8 — `Fold()` в `src/TreeSitterLexer.cpp`; стили — там же
+  (`LoadPaletteFromConfigXml`/`ApplyTreeSitterStyleColors`); инъекции — там же
   (сбор инъекций не вызывает `EvaluatePredicates`, `#match?` игнорируется).
+- **Локальные фиксы — кандидаты в PR апстриму.** В коде помечены `TODO(upstream)`; таблица
+  статусов и issue — в `docs/UPSTREAM.md` §0а. Когда проверено на живом Notepad++ — предложить
+  Thorium отдельными PR (фикс сворачивания language-agnostic, не завязан на BSL).
+- **Проверка сворачивания без Notepad++:** симулятор `…\Temp\opencode\ts-bsl\out\fold_fix.exe`
+  `<grammar.dll> tree_sitter_bsl <file.bsl>` печатает `OK/DEAD` по заголовкам (старый алгоритм —
+  `fold_sim.exe <file>`). На `fold_test.bsl`: старый `dead=6/7`, новый `visible=6 dead=0`.
 - **Сборка плагина (MSBuild, не CMake):**
   `MSBuild NppTreeSitter.vcxproj -p:Configuration=Release -p:Platform=x64` (и `Win32`).
   Выход: `build\x64\Release\TreeSitterLexer.dll`, `build\Win32\Release\TreeSitterLexer.dll`.
