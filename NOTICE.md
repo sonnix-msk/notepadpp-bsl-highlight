@@ -26,6 +26,15 @@
 - **Что делаем:** собираем из исходников (parser.c) без изменений.
   Текст лицензии: `LICENSES/tree-sitter-bsl.txt`.
 
+### tree-sitter-sdbl.dll — грамматика языка запросов 1С (SDBL)
+- **Лицензия:** MIT (тот же репозиторий `alkoleft/tree-sitter-bsl`, вторая грамматика).
+- **Автор:** Koryakin Aleksey (github.com/alkoleft).
+- **Источник:** https://github.com/alkoleft/tree-sitter-bsl (папка `grammars/sdbl`).
+- **Где:** только в **расширенной (Extended)** вариации дистрибутива; публичная (Standard)
+  её не включает. Служит для подсветки запросов внутри строк `.bsl` и в отдельных
+  `.sdbl`/`.1cquery`.
+- **Что делаем:** собираем из исходников (parser.c) без изменений.
+
 ### tree-sitter (runtime)
 - **Лицензия:** MIT.
 - **Автор:** Max Brunsfeld и участники.
@@ -37,6 +46,7 @@
 
 - `src/bsl-highlights.scm` — правила подсветки (tree-sitter queries), включая
   доработки против исходной грамматики (обработка препроцессора, идентификаторы).
+- `src/sdbl-highlights.scm` — правила подсветки языка запросов (Extended-вариация).
 - `src/TreeSitterLexer.xml` — конфигурация языка и цветовых схем в Notepad++.
 - `src/install.ps1`, `src/INSTALL.bat` — установщик и лаунчер.
 - `build/*` — скрипты сборки грамматики и формирования дистрибутива.
