@@ -242,6 +242,11 @@
         <Language name="treesitter.bsl" ext="bsl os" commentLine="//">
             <Keywords name="instre1">Процедура Функция КонецПроцедуры КонецФункции Экспорт Знач Перем Возврат Если Тогда Иначе ЕслиИначе КонецЕсли Пока Цикл Для Каждого Из По КонецЦикла Попытка Исключение ВызватьИсключение КонецПопытки Продолжить Прервать Перейти Новый Неопределено Истина Ложь Не И Или Ждать Асинх ДобавитьОбработчик УдалитьОбработчик Procedure Function EndProcedure EndFunction Export Val Var Return If Then Else ElsIf EndIf While Do For Each In To EndDo Try Except Raise EndTry Continue Break Goto New Undefined True False Not And Or Await Async AddHandler RemoveHandler</Keywords>
         </Language>
+
+        <!-- 1C:Enterprise query language (SDBL) as a standalone document. -->
+        <Language name="treesitter.sdbl" ext="sdbl 1cquery" commentLine="//">
+            <Keywords name="instre1">ВЫБРАТЬ ИЗ ГДЕ КАК СОЕДИНЕНИЕ ЛЕВОЕ ВНУТРЕННЕЕ ПОЛНОЕ СГРУППИРОВАТЬ УПОРЯДОЧИТЬ ИМЕЮЩИЕ ОБЪЕДИНИТЬ И ИЛИ НЕ УНИЧТОЖИТЬ ПОМЕСТИТЬ ДОБАВИТЬ ИТОГИ ПЕРВЫЕ РАЗЛИЧНЫЕ ВОЗР УБЫВ SELECT FROM WHERE AS JOIN LEFT INNER FULL GROUP ORDER HAVING UNION AND OR NOT DROP INTO INSERT TOTALS TOP DISTINCT ASC DESC</Keywords>
+        </Language>
     </Languages>
 
     <LexerStyles>
@@ -606,6 +611,23 @@
             <!-- SDBL query fragments inside BSL strings: own palette so a query
                  reads as a different language (Extended build). Tunable here or
                  via Style Configurator. -->
+            <WordsStyle name="QUERY KEYWORD"      styleID="14" fgColor="0B5394" fontStyle="1" />
+            <WordsStyle name="QUERY IDENTIFIER"   styleID="15" fgColor="0E312F" />
+            <WordsStyle name="QUERY STRING"       styleID="16" fgColor="7F6000" />
+            <WordsStyle name="QUERY NUMBER"       styleID="17" fgColor="B45F06" />
+            <WordsStyle name="QUERY AGGREGATE"    styleID="18" fgColor="00572E" fontStyle="1" />
+            <WordsStyle name="QUERY OPERATOR"     styleID="19" fgColor="666666" />
+            <WordsStyle name="QUERY FUNCTION"     styleID="20" fgColor="7B1FA2" fontStyle="1" />
+            <WordsStyle name="QUERY TYPE"         styleID="21" fgColor="00796B" />
+            <WordsStyle name="QUERY CONSTANT"     styleID="22" fgColor="752858" fontStyle="1" />
+            <WordsStyle name="QUERY PARAMETER"    styleID="23" fgColor="00838F" />
+            <WordsStyle name="QUERY PUNCTUATION"  styleID="24" fgColor="9AA0A6" />
+        </LexerType>
+
+        <LexerType name="treesitter.sdbl" desc="1C:Enterprise query language (SDBL, tree-sitter)" ext="sdbl 1cquery">
+            <WordsStyle name="DEFAULT"            styleID="0"  fgColor="000000" bgColor="FFFFFF" />
+            <WordsStyle name="COMMENT"            styleID="1"  fgColor="008000" fontStyle="2" />
+            <!-- Query palette, identical to the fragments inside BSL strings. -->
             <WordsStyle name="QUERY KEYWORD"      styleID="14" fgColor="0B5394" fontStyle="1" />
             <WordsStyle name="QUERY IDENTIFIER"   styleID="15" fgColor="0E312F" />
             <WordsStyle name="QUERY STRING"       styleID="16" fgColor="7F6000" />
