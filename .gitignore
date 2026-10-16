@@ -1,6 +1,9 @@
 # Build output / distributable (attached to Releases, not committed)
 dist/
 
+# Local build with patched plugin from the fork (make-release-local.ps1)
+dist-local/
+
 # Scratch
 *.tmp
 *.log

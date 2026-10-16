@@ -16,7 +16,35 @@
 - **Спека:** `D:\OpenCode\Скрипты\notepad++-bsl-подсветка-СПЕКА.md` (вне репо).
 - **Индекс проекта:** `D:\OpenCode\Скрипты\README-СКРИПТЫ.md` (раздел «Подсветка BSL»).
 - **Собранный дистрибутив:** `Notepad++-BSL\dist\Notepad++-BSL.zip`.
+- **Личный форк плагина:** `D:\OpenCode\Форки\NppTreeSitter` (см. отдельный раздел ниже);
+  локальная сборка — `Notepad++-BSL\build\make-release-local.ps1`.
 - **Рабочие инструменты (temp):** `C:\Users\SSOLNT~1\AppData\Local\Temp\opencode\ts-bsl\`.
+
+## Личный форк плагина (фиксы #7/#8, позже — инъекции)
+
+Все три личные задачи (детект уже открытых файлов, сворачивание, подсветка запросов)
+живут в **плагине** `NppTreeSitter`, а не в грамматике и не в наших `.scm`. Поэтому заведён
+личный форк плагина; публичный дистрибутив при этом нетронут — он качает стоковый плагин
+из релиза Thorium (`build/versions.psd1`).
+
+- **Форк:** https://github.com/sonnix-msk/NppTreeSitter (fork of `Thorium/NppTreeSitter`).
+- **Локально:** `D:\OpenCode\Форки\NppTreeSitter` (клон с сабмодулем `external/tree-sitter`).
+- **Ремоуты:** `origin` = наш форк, `upstream` = Thorium.
+- **Ветки:** `master` — зеркало апстрима (не редактируем); `sonnix/mapping` — фикс #7;
+  `sonnix/folding` — фикс #8; `sonnix/injections` — SDBL (позже).
+- **Где что править:** #7 — `src/dllmain.cpp` (`DetectTreeSitterLanguageForFile`,
+  `PreferBuiltInLexerForExtension`); #8 — `Fold()` в `src/TreeSitterLexer.cpp`; инъекции — там же
+  (сбор инъекций не вызывает `EvaluatePredicates`, `#match?` игнорируется).
+- **Сборка плагина (MSBuild, не CMake):**
+  `MSBuild NppTreeSitter.vcxproj -p:Configuration=Release -p:Platform=x64` (и `Win32`).
+  Выход: `build\x64\Release\TreeSitterLexer.dll`, `build\Win32\Release\TreeSitterLexer.dll`.
+  Тулсет `v145` (VS «18» BuildTools, путь через `vswhere`).
+- **Обновление из апстрима:** `git fetch upstream` → `git rebase upstream/master sonnix/<ветка>`.
+- **Личный пакет:** `build\make-release-local.ps1` вызывает публичный `make-release.ps1`
+  (он НЕ меняется), подменяет DLL на собранные из форка и кладёт `dist-local\Notepad++-BSL-local.zip`.
+  Флаги: `-BuildPlugin` (собрать плагин из форка), `-ForkDir <путь>`.
+- **Лицензия:** NppTreeSitter — GPL-2.0-or-later. Для личного использования публиковать не обязан;
+  при раздаче своей DLL исходники должны быть доступны (публичный форк это закрывает).
 
 ## Опубликовано
 
@@ -107,6 +135,8 @@
 2. Репозиторий: `D:\OpenCode\Скрипты\Notepad++-BSL`. Проверить `git status`, `git log`.
 3. **Сборка пакета:** `powershell -File build\make-release.ps1` (нужен MSVC Build Tools;
    каталог `dist\` пересобирается). Перед сборкой закрыть Notepad++.
+   Для личной сборки с пропатченным плагином — `build\make-release-local.ps1 -BuildPlugin`
+   (→ `dist-local\`), см. раздел «Личный форк плагина».
 4. **Публикация:** `git push origin main` (уходит в оба зеркала — GitHub + GitFlic).
 5. **GitHub API** (релизы/issues) — токен уже сохранён в Git Credential Manager, получить так:
    ```powershell
