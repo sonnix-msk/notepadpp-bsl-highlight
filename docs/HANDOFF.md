@@ -175,6 +175,8 @@
    [#10 шрифт](https://github.com/Thorium/NppTreeSitter/pull/10),
    [#11 bsl-детект](https://github.com/Thorium/NppTreeSitter/pull/11) — все `mergeable`.
    Детали и ветки — `docs/UPSTREAM.md` §0а. Следить за ответами автора.
+   Слежение: `powershell -File D:\OpenCode\Скрипты\bsl-upstream-watch.ps1` (состояние PR/issue и
+   новые комментарии; повторный запуск показывает только изменения).
 5. **Подсветка запросов SDBL** (`sonnix/injections`, позже): инъекции не вызывают
    `EvaluatePredicates` (`#match?` игнорируется), нет конкатенации. Требует заметной доработки
    плагина — не quick fix.
