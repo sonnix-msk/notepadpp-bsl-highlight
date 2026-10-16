@@ -7,6 +7,10 @@
 
 ### TreeSitterLexer.dll — плагин NppTreeSitter
 - **Лицензия:** GPL-2.0-or-later (заявлена в README проекта).
+  <!-- TODO(license): в апстриме противоречие — README: GPL-2.0-or-later, но NppTreeSitter.vcxproj
+       заявляет Unlicense/Public Domain, файла LICENSE в репо нет. Исходим из GPL (строже =
+       безопаснее). Уточнить у автора (github.com/Thorium) до публичной раздачи Extended-сборки
+       с ПРОПАТЧЕННОЙ DLL. См. docs/HANDOFF.md, «⚠ Открытые вопросы». -->
 - **Автор:** Tuomas Hietanen (github.com/Thorium).
 - **Источник:** https://github.com/Thorium/NppTreeSitter
 - **Что делаем:** распространяем **без изменений**, только бинарник из официального
