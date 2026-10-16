@@ -15,10 +15,25 @@
   `D:\OpenCode\Скрипты`, НЕ путать с родительским).
 - **Спека:** `D:\OpenCode\Скрипты\notepad++-bsl-подсветка-СПЕКА.md` (вне репо).
 - **Индекс проекта:** `D:\OpenCode\Скрипты\README-СКРИПТЫ.md` (раздел «Подсветка BSL»).
-- **Собранный дистрибутив:** `Notepad++-BSL\dist\Notepad++-BSL.zip`.
+- **Собранный дистрибутив (Standard):** `Notepad++-BSL\dist\Notepad++-BSL.zip`.
 - **Личный форк плагина:** `D:\OpenCode\Форки\NppTreeSitter` (см. отдельный раздел ниже);
-  локальная сборка — `Notepad++-BSL\build\make-release-local.ps1`.
+  сборка Extended — `Notepad++-BSL\build\make-release-extended.ps1`.
 - **Рабочие инструменты (temp):** `C:\Users\SSOLNT~1\AppData\Local\Temp\opencode\ts-bsl\`.
+
+## Две вариации дистрибутива
+
+Один репозиторий, **два артефакта** (вариант задаётся сборочным скриптом, не git-ветками —
+`.scm`/грамматика/установщик общие, один источник истины):
+
+| Вариация | Сборка | Артефакт | Что внутри |
+|---|---|---|---|
+| **Standard** | `build\make-release.ps1` | `dist\Notepad++-BSL.zip` | стоковый лексер Thorium (как публичный релиз) |
+| **Extended** (авторская) | `build\make-release-extended.ps1` | `dist-extended\Notepad++-BSL-extended.zip` | пропатченный лексер из форка: фиксы #7/#8/шрифт, (позже) фрагменты запросов SDBL |
+
+Публичный релиз на GitHub/GitFlic — это **Standard**. Extended существует для личного
+использования (и для желающих); в нём — только наша DLL из форка вместо стоковой.
+По мере влития PR #9/#10/#11 в апстрим Extended «худеет» (остаётся только своя, не-апстрим
+часть — инъекции/скоринг SDBL).
 
 ## Личный форк плагина (фиксы #7/#8, позже — инъекции)
 
@@ -35,7 +50,9 @@
   фикс мелкого шрифта → [PR #10](https://github.com/Thorium/NppTreeSitter/pull/10);
   `sonnix/folding` — сворачивание (#8) → [PR #9](https://github.com/Thorium/NppTreeSitter/pull/9);
   `sonnix/mapping` — bsl-детект + локальная XML-палитра (в апстрим не ушло);
-  `sonnix/personal` — интеграция для личной сборки; `sonnix/injections` — SDBL (позже).
+  `sonnix/personal` — **интеграция всех наших фиксов** (из неё собирается Extended);
+  `sonnix/injections` — разработка SDBL-фрагментов (дизайн+харнесс; `docs/QUERY-FRAGMENTS.md`),
+  вливается в `sonnix/personal` по мере готовности.
 - **Где что править:** #7 — `src/dllmain.cpp` (`DetectTreeSitterLanguageForFile`,
   `PreferBuiltInLexerForExtension`); #8 — `Fold()` в `src/TreeSitterLexer.cpp`; стили — там же
   (`LoadPaletteFromConfigXml`/`ApplyTreeSitterStyleColors`); инъекции — там же
@@ -51,8 +68,9 @@
   Выход: `build\x64\Release\TreeSitterLexer.dll`, `build\Win32\Release\TreeSitterLexer.dll`.
   Тулсет `v145` (VS «18» BuildTools, путь через `vswhere`).
 - **Обновление из апстрима:** `git fetch upstream` → `git rebase upstream/master sonnix/<ветка>`.
-- **Личный пакет:** `build\make-release-local.ps1` вызывает публичный `make-release.ps1`
-  (он НЕ меняется), подменяет DLL на собранные из форка и кладёт `dist-local\Notepad++-BSL-local.zip`.
+- **Сборка Extended:** `build\make-release-extended.ps1` вызывает публичный `make-release.ps1`
+  (он НЕ меняется), подменяет DLL на собранные из форка и кладёт
+  `dist-extended\Notepad++-BSL-extended.zip`.
   Флаги: `-BuildPlugin` (собрать плагин из форка), `-ForkDir <путь>`.
 - **Лицензия:** NppTreeSitter — GPL-2.0-or-later. Для личного использования публиковать не обязан;
   при раздаче своей DLL исходники должны быть доступны (публичный форк это закрывает).
@@ -74,8 +92,8 @@
 - `docs/ANNOUNCE.md` — три готовых текста: Infostart (инструмент+статья), Хабр
   (техстатья с рамкой про AI-ассистента), Telegram (короткий пост). Ссылки на релиз вписаны.
 - `docs/UPSTREAM.md` — теория апстрима, отправленные issue, исследование SDBL.
-- `docs/QUERY-FRAGMENTS.md` — дизайн подсветки фрагментов запросов SDBL (детекция, лексикон,
-  формула, порог, план реализации в C++); харнесс — `tools/query-fragments/`.
+- `docs/QUERY-FRAGMENTS.md` — **перенесён в форк** (`sonnix/injections`, `NppTreeSitter/docs/`),
+  т.к. фича требует пропатченного лексера. Здесь только указатель.
 - Скриншот для статей — **ждём от пользователя** (он делает сам).
 
 ## Что сделано (по темам)
@@ -148,8 +166,8 @@
 2. Репозиторий: `D:\OpenCode\Скрипты\Notepad++-BSL`. Проверить `git status`, `git log`.
 3. **Сборка пакета:** `powershell -File build\make-release.ps1` (нужен MSVC Build Tools;
    каталог `dist\` пересобирается). Перед сборкой закрыть Notepad++.
-   Для личной сборки с пропатченным плагином — `build\make-release-local.ps1 -BuildPlugin`
-   (→ `dist-local\`), см. раздел «Личный форк плагина».
+   Расширенная (авторская) вариация — `build\make-release-extended.ps1 -BuildPlugin`
+   (→ `dist-extended\`), см. раздел «Две вариации дистрибутива».
 4. **Публикация:** `git push origin main` (уходит в оба зеркала — GitHub + GitFlic).
 5. **GitHub API** (релизы/issues) — токен уже сохранён в Git Credential Manager, получить так:
    ```powershell
@@ -179,12 +197,12 @@
    Детали и ветки — `docs/UPSTREAM.md` §0а. Следить за ответами автора.
    Слежение: `powershell -File D:\OpenCode\Скрипты\bsl-upstream-watch.ps1` (состояние PR/issue и
    новые комментарии; повторный запуск показывает только изменения).
-5. **Подсветка запросов SDBL** — **дизайн готов и проверен на корпусе**: `docs/QUERY-FRAGMENTS.md`
-   (+ харнесс `tools/query-fragments/query_scan.py`, лексикон `lexicon.json`, примеры `examples.md`).
-   План: ветка `sonnix/injections`, сначала починить сбор инъекций (`EvaluatePredicates` не
-   вызывается), затем проход-скоринг по признакам (порог 0.30). Корпус для замеров:
-   `D:\OpenCode\Скрипты\Tmp\bsl` (7 модулей, 15 МБ — **реальная конфигурация, вне репо, может
-   пропасть; сырые отчёты с текстом модулей в публичный репо не коммитить**).
+5. **Подсветка запросов SDBL** — это фича **авторской вариации** (нужен пропатченный лексер),
+   поэтому её дизайн и харнесс лежат **в форке**: `NppTreeSitter/docs/QUERY-FRAGMENTS.md` и
+   `NppTreeSitter/tools/query-fragments/` (ветка `sonnix/injections`). Порог 0.30, лексикон из
+   грамматики SDBL, проверено на корпусе. Корпус для замеров: `D:\OpenCode\Скрипты\Tmp\bsl`
+   (7 модулей, 15 МБ — **реальная конфигурация, вне репо; сырые отчёты с текстом модулей
+   нигде публично не коммитить**).
 6. Мелкие незакрытые хотелки пользователя: фон/тёмная тема и шрифт — уже настраиваются через
    XML (`<LexerType name="treesitter.bsl">`, `fontName`/`fontSize`/`bgColor`), правки без
    пересборки; `=` в присваивании сейчас Default (в грамматике — анонимный литерал, не `(operator)`).

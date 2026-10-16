@@ -35,8 +35,9 @@
   (`sonnix/mapping`, `9f9084a`). Автор плагина сознательно не полагается на XML (комментарий
   над `ApplyTreeSitterStyleColors`), поэтому в PR по шрифту ушёл только багфикс (наследование
   шрифта из `STYLE_DEFAULT`), без XML-палитры.
-- **Интеграция для личной сборки:** `sonnix/personal` (mapping+folding). Личный дистрибутив —
-  `Notepad++-BSL\build\make-release-local.ps1` → `dist-local\Notepad++-BSL-local.zip`.
+- **Интеграция для личной сборки:** `sonnix/personal`. Расширенная (авторская) вариация
+  дистрибутива — `Notepad++-BSL\build\make-release-extended.ps1` → `dist-extended\Notepad++-BSL-extended.zip`
+  (см. `HANDOFF.md`, «Две вариации дистрибутива»).
 - Баг мелкого шрифта не специфичен для BSL — воспроизводится на любом языке при прямой
   установке лексера (авто-детект/восстановление сессии), поэтому в описании PR нет BSL.
 

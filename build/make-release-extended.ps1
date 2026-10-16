@@ -1,15 +1,20 @@
-﻿# Локальная сборка дистрибутива с ПРОПАТЧЕННЫМ плагином из собственного форка
-# NppTreeSitter. Публичный make-release.ps1 при этом НЕ изменяется: этот скрипт
-# вызывает его как есть (качает стоковый плагин, собирает грамматику), затем
-# подменяет TreeSitterLexer.dll на собранный из форка и переупаковывает.
+﻿# Сборка РАСШИРЕННОЙ (авторской) вариации дистрибутива: с ПРОПАТЧЕННЫМ плагином из
+# собственного форка NppTreeSitter. Стандартная (публичная) вариация собирается
+# make-release.ps1 и НЕ изменяется: этот скрипт вызывает её как есть (качает стоковый
+# плагин, собирает грамматику), затем подменяет TreeSitterLexer.dll на собранный из
+# форка и переупаковывает в отдельный архив.
 #
-# Схема форка, ветки и порядок обновления из апстрима — в docs/HANDOFF.md
-# (раздел «Форк плагина») и docs/UPSTREAM.md.
+# Две вариации (см. docs/HANDOFF.md, «Две вариации дистрибутива»):
+#   Standard  : build\make-release.ps1          -> dist\Notepad++-BSL.zip
+#   Extended  : build\make-release-extended.ps1 -> dist-extended\Notepad++-BSL-extended.zip
+#
+# Расширенная вариация добавляет: авто-детект .bsl/.os, фикс сворачивания, корректные
+# стили/шрифт, (позже) подсветку фрагментов запросов SDBL. Требует пропатченного лексера.
 #
 # Примеры:
-#   .\make-release-local.ps1                 # взять уже собранные DLL из форка
-#   .\make-release-local.ps1 -BuildPlugin    # сперва собрать плагин из форка
-#   .\make-release-local.ps1 -ForkDir D:\path\to\NppTreeSitter
+#   .\make-release-extended.ps1                 # взять уже собранные DLL из форка
+#   .\make-release-extended.ps1 -BuildPlugin    # сперва собрать плагин из форка
+#   .\make-release-extended.ps1 -ForkDir D:\path\to\NppTreeSitter
 
 [CmdletBinding()]
 param(
@@ -26,7 +31,7 @@ function Err($m)  { Write-Host $m -ForegroundColor Red }
 
 $Build = $PSScriptRoot
 $Repo  = Split-Path -Parent $Build
-if (-not $OutDir) { $OutDir = Join-Path $Repo 'dist-local' }
+if (-not $OutDir) { $OutDir = Join-Path $Repo 'dist-extended' }
 
 # --- 1. Пути к собранному плагину в форке ----------------------------------
 $plugins = @{
@@ -58,8 +63,8 @@ foreach ($a in @('x64', 'x86')) {
     }
 }
 
-# --- 3. Публичная сборка (стоковый плагин + наша грамматика) ----------------
-Info "=== Публичная сборка в $OutDir ==="
+# --- 3. Базовая сборка (стоковый плагин + наша грамматика) -----------------
+Info "=== Базовая сборка в $OutDir ==="
 $global:LASTEXITCODE = 0
 & (Join-Path $Build 'make-release.ps1') -OutDir $OutDir
 if (-not $? -or ($LASTEXITCODE -and $LASTEXITCODE -ne 0)) { Err 'make-release.ps1 завершился с ошибкой.'; exit 1 }
@@ -72,14 +77,16 @@ foreach ($a in @('x64', 'x86')) {
     Info "Подменён плагин $a -> $dst"
 }
 
-# --- 5. Переупаковка в отдельный архив (публичный zip не трогаем) -----------
-$pkgRoot = Join-Path $OutDir 'Notepad++-BSL'
-$zipOut  = Join-Path $OutDir 'Notepad++-BSL-local.zip'
+# --- 5. Переупаковка в архив расширенной вариации --------------------------
+$pkgRoot     = Join-Path $OutDir 'Notepad++-BSL'
+$zipOut      = Join-Path $OutDir 'Notepad++-BSL-extended.zip'
+$strayStock  = Join-Path $OutDir 'Notepad++-BSL.zip'   # базовая сборка его создала
 Remove-Item -LiteralPath $zipOut -Force -ErrorAction SilentlyContinue
 Compress-Archive -Path $pkgRoot -DestinationPath $zipOut -Force
+Remove-Item -LiteralPath $strayStock -Force -ErrorAction SilentlyContinue
 
 $hash = (Get-FileHash -LiteralPath $zipOut -Algorithm SHA256).Hash
 Info ''
-Info "Пакет (локальный): $pkgRoot"
-Info "Архив (локальный): $zipOut ($((Get-Item -LiteralPath $zipOut).Length) байт)"
+Info "Пакет (расширенный): $pkgRoot"
+Info "Архив (расширенный): $zipOut ($((Get-Item -LiteralPath $zipOut).Length) байт)"
 Info "SHA256: $hash"
