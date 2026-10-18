@@ -33,7 +33,7 @@
 Публичный релиз на GitHub/GitFlic — это **Standard**. Extended существует для личного
 использования **и опубликован как релиз форка**:
 https://github.com/sonnix-msk/NppTreeSitter/releases/tag/v0.1.0-extended
-(ассет `notepadpp-bsl-extended-0.1.0.zip`, SHA256 `207A7493…B57CE1A`; версия 0.1.0 — как у
+(ассет `notepadpp-bsl-extended-0.1.0.zip`, SHA256 `AB312B2D…D12F1E3`; версия 0.1.0 — как у
 Standard). В нём — только наша DLL из форка вместо стоковой.
 По мере влития PR #9/#10/#11 в апстрим Extended «худеет» (остаётся только своя, не-апстрим
 часть — SDBL-фрагменты/язык запроса).
