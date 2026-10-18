@@ -58,7 +58,8 @@ Standard). В нём — только наша DLL из форка вместо 
 
 - **Форк:** https://github.com/sonnix-msk/NppTreeSitter (fork of `Thorium/NppTreeSitter`).
   Зеркало на GitFlic: https://gitflic.ru/project/sonnix/npptreesitter
-  (все ветки и теги, дефолтная ветка `sonnix/personal`; релиз на GitFlic создаётся в UI).
+  (все ветки и теги, дефолтная ветка `sonnix/personal`; релиз `v0.1.0-extended` создан
+  в UI: https://gitflic.ru/project/sonnix/npptreesitter/release/b88de8be-55cb-4798-aa09-f0a6c00451a4).
 - **Локально:** `D:\OpenCode\Форки\NppTreeSitter` (клон с сабмодулем `external/tree-sitter`).
 - **Ремоуты:** `origin` = наш форк (GitHub), `upstream` = Thorium, `gitflic` = зеркало форка.
 - **Ветки:** `master` — зеркало апстрима (не редактируем); `sonnix/bsl-detect` — авто-детект
@@ -112,7 +113,9 @@ Standard). В нём — только наша DLL из форка вместо 
 - **Extended опубликован на форке** (GitHub): релиз `v0.1.0-extended`, ассет
   `notepadpp-bsl-extended-0.1.0.zip` (819725 б, SHA256 `AB312B2D…D12F1E3`).
   Зеркало исходников форка на GitFlic: https://gitflic.ru/project/sonnix/npptreesitter
-  (релиз на GitFlic ещё не создан — делается в UI на теге `v0.1.0-extended`).
+  — **релиз создан** (в UI, на теге `v0.1.0-extended`, тот же файл):
+  https://gitflic.ru/project/sonnix/npptreesitter/release/b88de8be-55cb-4798-aa09-f0a6c00451a4
+  Скачивание проверено: 819725 байт, SHA256 совпадает с GitHub (`AB312B2D…D12F1E3`).
 - **Анонс НЕ опубликован** (тексты готовы).
 
 ## Готовое к публикации
@@ -309,3 +312,20 @@ Kaspersky (Web Anti-Virus, «Облачная защита») заблокиро
   удалить залоченный файл и пересобрать; исключения помогают не всегда. Notepad++ тоже держит
   загруженную DLL — закрывать перед сборкой.
 - До анонса (0 скачиваний) перевыпуск под тем же тегом допустим; после анонса — только `0.1.1+`.
+
+## Создание релиза на GitFlic через UI (грабли)
+
+- **Заголовок релиза обрезается на 40 символах** (`maxlength=40`), молча, посреди слова.
+  Писать коротко: `Notepad++ BSL / SDBL Extended 0.1.0`.
+- **Два разных `<input type=file>`**: видимый `#uploader` (внутри `label`) и скрытый
+  `#customFile[name=files]` (уходит в форму). Наполнять надо **`#uploader`** — иначе в форме
+  файл есть, а в списке пусто. `setInputFiles('#uploader', zip)` (Playwright) — работает.
+- Описание — **CKEditor 5**: в `textarea[name=description]` лежит HTML, но поле скрыто.
+  Заполнять так: `document.querySelector('.ck-editor__editable').ckeditorInstance.setData(html)`
+  (markdown → HTML через `marked` из `browser-ai-bridge/node_modules`).
+- Тег — combobox: клик по `input[placeholder="Выберите тег"]`, ввод имени, клик
+  `.vs__dropdown-option`. Проверять `input[name=releaseTagName]` → `refs/tags/<tag>`.
+- Архив проекта к релизу **не** прикреплять (чекбокс `attachProjectArchive`), «предварительный
+  релиз» (`preRelease`) — по необходимости.
+- Проверка результата: ссылка `<release-url>/<asset-uuid>/download` → скачать через
+  `context.request` и сверить SHA256.
