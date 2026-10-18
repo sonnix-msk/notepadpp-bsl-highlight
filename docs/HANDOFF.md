@@ -104,7 +104,8 @@ Standard). В нём — только наша DLL из форка вместо 
 - GitFlic (зеркало): https://gitflic.ru/project/sonnix/notepadpp-bsl-highlight
 - `origin` настроен пушить в **оба** (два push-url). `git push origin main` → оба зеркала.
   Отдельный remote `gitflic` — для fetch/точечных операций.
-- Ветка `main` (`6e06c90`), тег `v0.1.0` → `26fbbc6` (релизный код; после тега только docs).
+- Ветка `main` (после `66b43c8` идут только docs-коммиты), тег `v0.1.0` → `26fbbc6`
+  (релизный код; после тега в `main` — только документация). Точный head смотреть через `git log`.
 - **Релизы `v0.1.0`** на обеих площадках с `Notepad++-BSL.zip` (547225 байт,
   SHA256 `0DBF0FF0…31ED696`). GitHub release id `413695166`, GitFlic release id
   `465be0ad-33e5-459c-a6e8-70573793e4e2`. Скачивание проверено.
