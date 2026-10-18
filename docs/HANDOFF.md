@@ -57,8 +57,10 @@ Standard). В нём — только наша DLL из форка вместо 
 из релиза Thorium (`build/versions.psd1`).
 
 - **Форк:** https://github.com/sonnix-msk/NppTreeSitter (fork of `Thorium/NppTreeSitter`).
+  Зеркало на GitFlic: https://gitflic.ru/project/sonnix/npptreesitter
+  (все ветки и теги, дефолтная ветка `sonnix/personal`; релиз на GitFlic создаётся в UI).
 - **Локально:** `D:\OpenCode\Форки\NppTreeSitter` (клон с сабмодулем `external/tree-sitter`).
-- **Ремоуты:** `origin` = наш форк, `upstream` = Thorium.
+- **Ремоуты:** `origin` = наш форк (GitHub), `upstream` = Thorium, `gitflic` = зеркало форка.
 - **Ветки:** `master` — зеркало апстрима (не редактируем); `sonnix/bsl-detect` — авто-детект
   `.bsl`/`.os` → [PR #11](https://github.com/Thorium/NppTreeSitter/pull/11); `sonnix/styles` —
   фикс мелкого шрифта → [PR #10](https://github.com/Thorium/NppTreeSitter/pull/10);

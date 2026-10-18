@@ -31,6 +31,9 @@
 
 **https://github.com/sonnix-msk/NppTreeSitter/releases/latest**
 
+Зеркало исходников (GitFlic, если GitHub недоступен):
+**https://gitflic.ru/project/sonnix/npptreesitter** (ветка `sonnix/personal`).
+
 Это **неофициальная (unofficial) сборка** на базе форка `Thorium/NppTreeSitter`; исходники —
 в том же репозитории форка. Основной дистрибутив (`Notepad++-BSL.zip`) Extended не заменяет.
 
@@ -164,6 +167,8 @@ x86  tree-sitter-bsl.dll  D849ADF974B2F2AA82DADC6CF8E0C942A43A9C63092CEB4A364CD5
 
 - GitHub: https://github.com/sonnix-msk/notepadpp-bsl-highlight
 - GitFlic: https://gitflic.ru/project/sonnix/notepadpp-bsl-highlight
+- Форк плагина (исходники Extended): https://github.com/sonnix-msk/NppTreeSitter ·
+  зеркало https://gitflic.ru/project/sonnix/npptreesitter
 
 ## Участие
 
