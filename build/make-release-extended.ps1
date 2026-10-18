@@ -106,7 +106,15 @@ foreach ($a in @('x64', 'x86')) {
     if ($sdblReady) {
         Copy-Item -LiteralPath (Join-Path $OutDir "grammars\$a\tree-sitter-sdbl.dll") -Destination $tsg -Force
         Copy-Item -LiteralPath (Join-Path $Src 'sdbl-highlights.scm') -Destination $tsg -Force
-        Info "Добавлена грамматика SDBL ($a) + sdbl-highlights.scm"
+        # Scorer lexicon: the plugin reads it from the grammar dir, one file per
+        # architecture. Without it the SDBL fragment pass silently does nothing.
+        $lexicon = Join-Path $Src 'bsl-query-fragments.json'
+        if (-not (Test-Path -LiteralPath $lexicon)) {
+            Err "Нет $lexicon — подсветка фрагментов запросов не будет работать."
+            exit 1
+        }
+        Copy-Item -LiteralPath $lexicon -Destination $tsg -Force
+        Info "Добавлена грамматика SDBL ($a) + sdbl-highlights.scm + bsl-query-fragments.json"
     }
 }
 

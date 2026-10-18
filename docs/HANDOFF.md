@@ -40,7 +40,10 @@ Standard). В нём — только наша DLL из форка вместо 
 **Extended** автоматически кладёт `tree-sitter-sdbl.dll` + `sdbl-highlights.scm` в
 `TreeSitterGrammars` (сборка — `build-sdbl-grammar.ps1`, воспроизводимо, x64+x86; флаг
 `-SkipSdbl` пропускает) и стили `QUERY *` (14..24) — в `src/TreeSitterLexer.xml`.
-Если `tree-sitter-sdbl.dll` нет, подсветка запросов молча отключается (остальное работает).
+**Обязательно** вместе с ними кладётся `src/bsl-query-fragments.json` (лексикон скорера):
+лексер читает его из `TreeSitterGrammars\` по одному на архитектуру и **только один раз**
+(после замены нужен перезапуск N++). Если файла нет — подсветка **фрагментов в строках**
+молча не работает (отдельные `.sdbl`/`.1cquery` при этом работают).
 **Лицензия Extended:** GPL-2.0-or-later (строке README апстрима; в апстриме нет файла LICENSE,
 а `vcxproj` заявляет Unlicense — выбрана строгая трактовка). В форке добавлены `LICENSE` и
 `FORK-NOTICE.md`, дефолтная ветвь форка — `sonnix/personal`. Публикация релиза на форке
